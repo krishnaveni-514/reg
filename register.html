@@ -3,123 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration Form with Validation</title>
+    <title>Registration Form</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #312f2f;
             margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
         }
 
-        #registrationContainer {
-            text-align: center;
-        }
-
-        #registrationForm {
+        form {
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 300px;
-            margin: 20px auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
         }
 
         input {
             width: 100%;
-            padding: 10px;
-            margin: 8px 0;
+            padding: 8px;
+            margin-bottom: 16px;
             box-sizing: border-box;
         }
 
-        .error-message {
-            color: #ff0000;
-            margin-bottom: 10px;
-        }
-
         button {
-            background-color: #4caf50;
-            color: white;
-            padding: 10px 15px;
+            background-color: #3ba7da;
+            color: #fff;
+            padding: 10px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #3ba7da;
         }
     </style>
 </head>
 <body>
 
-    <div id="registrationContainer">
-        <h1>Registration Form</h1>
+    <form id="registrationForm" method="post" onsubmit="return validateForm()">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
 
-        <form id="registrationForm">
-            <label for="fullName">Full Name:</label>
-            <input type="text" id="fullName" name="fullName" required>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
 
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+        <label for="number">Phone number:</label>
+        <input type="text" id="number" name="number" pattern="\d{10}" title="Phone number must be 10 digits" required>
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" min="18" required>
 
-            <label for="mobileNumber">Mobile Number:</label>
-            <input type="tel" id="mobileNumber" name="mobileNumber" pattern="[0-9]{10}" required
-                title="Please enter a valid 10-digit mobile number">
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender" required>
+            <option value="" disabled selected>Select your gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+        </select>
 
-            <div class="error-message" id="errorMessage"></div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
 
-            <button type="button" onclick="validateForm()">Submit</button>
-        </form>
-    </div>
+        <label for="confirm-password">Confirm Password:</label>
+        <input type="password" id="confirm-password" name="confirm-password" required>
+
+        <button type="submit">Register</button>
+
+    </form>
 
     <script>
         function validateForm() {
-            var fullName = document.getElementById('fullName').value;
+            var username = document.getElementById('username').value;
             var email = document.getElementById('email').value;
+            var number = document.getElementById('number').value;
+            var age = document.getElementById('age').value;
+            var gender = document.getElementById('gender').value;
             var password = document.getElementById('password').value;
-            var mobileNumber = document.getElementById('mobileNumber').value;
-            var errorMessageElement = document.getElementById('errorMessage');
+            var confirmPassword = document.getElementById('confirm-password').value;
 
-            errorMessageElement.innerHTML = '';
-
-            if (fullName === '' || email === '' || password === '' || mobileNumber === '') {
-                errorMessageElement.innerHTML = 'All fields must be filled out';
-                return;
+            if (password !== confirmPassword) {
+                alert("Password and Confirm Password do not match");
+                return false;
             }
 
-            if (!isValidName(fullName)) {
-                errorMessageElement.innerHTML = 'Please enter a valid name';
-                return;
+            if (username === '' || email === '' || number === '' || age === '' || gender === '' || password === '' || confirmPassword === '') {
+                alert("All fields must be filled");
+                return false;
             }
 
-            if (!isValidEmail(email)) {
-                errorMessageElement.innerHTML = 'Please enter a valid email address';
-                return;
+            if (age < 18) {
+                alert("You must be at least 18 years old to register");
+                return false;
             }
 
-            if (!isValidMobileNumber(mobileNumber)) {
-                errorMessageElement.innerHTML = 'Please enter a valid 10-digit mobile number';
-                return;
-            }
+            window.location.href = 'succes.html';
 
-        
-
-            alert('Registration successful!\n\nFull Name: ' + fullName + '\nEmail: ' + email +
-                '\nMobile Number: ' + mobileNumber);
-            document.getElementById('registrationForm').reset();
-        }
-
-        function isValidEmail(email) {
-            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-        }
-
-        function isValidMobileNumber(number) {
-            var mobileNumberRegex = /^[0-9]{10}$/;
-            return mobileNumberRegex.test(number);
+            return false;
         }
     </script>
 
